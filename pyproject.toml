@@ -1,0 +1,19 @@
+[project]
+name = "cog-patterns"
+version = "0.1.0"
+description = "Cloud Optimized GeoTIFF (COG) patterns for cloud-native raster access"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "ZQM Computing", email = "zqmcomputing@gmail.com"}]
+keywords = ["cog", "geotiff", "raster", "cloud", "geospatial", "titiler", "xarray"]
+
+[project.urls]
+Homepage = "https://github.com/ZQM-Computing/cog-patterns"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

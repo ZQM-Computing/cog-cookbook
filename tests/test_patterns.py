@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+"""Tests for cog-patterns."""
+import subprocess
+import sys
+from pathlib import Path
+
+EXAMPLES_DIR = Path(__file__).parent.parent / "examples"
+
+
+def test_shell_scripts_exist():
+    """All shell scripts exist."""
+    for run_sh in sorted(EXAMPLES_DIR.glob("*/run.sh")):
+        assert run_sh.exists(), f"Missing: {run_sh}"
+
+
+def test_python_syntax():
+    """Python example has valid syntax."""
+    py_file = EXAMPLES_DIR / "04-xarray-integration" / "run.py"
+    result = subprocess.run(
+        [sys.executable, "-m", "py_compile", str(py_file)],
+        capture_output=True
+    )
+    assert result.returncode == 0, f"Syntax error in {py_file}"
+
+
+def test_readme_exists():
+    """README.md exists."""
+    assert (Path(__file__).parent.parent / "README.md").exists()
+
+
+def test_license_exists():
+    """LICENSE file exists."""
+    assert (Path(__file__).parent.parent / "LICENSE").exists()

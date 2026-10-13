@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.env
+*.swp
+.DS_Store
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+node_modules/
+
+# Raster data (don't commit large geospatial files)
+*.tif
+*.tiff
+*.img
+*.vrt
+!tests/fixtures/*.tif
