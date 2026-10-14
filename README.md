@@ -1,48 +1,83 @@
 # Cloud Optimized GeoTIFF (COG) Patterns
 
-Production-tested COG patterns for cloud-native raster access, serving, and analysis.
+[![CI](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml/badge.svg)](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml)
+
+Production-tested Cloud Optimized GeoTIFF patterns for cloud-native raster access, serving, and analysis — create them, validate them, serve them as tiles, and read them lazily.
 
 ## Who this is for
 
-Geospatial developers, cloud engineers, and data engineers who serve and analyze
-large raster datasets in cloud environments.
+Geospatial developers, cloud engineers, and data engineers who store and serve large raster datasets from object storage. A COG is a regular GeoTIFF with internal tiling and overviews, which means HTTP range requests can fetch just the window you need.
 
-## What's inside
+## Prerequisites
 
-- `examples/` — Runnable scripts with sample data
-- `tests/` — Validation tests for each pattern
+- GDAL >= 3.6 with command-line utilities (`gdal-bin`)
+- Python 3.11+ for the xarray example (`xarray`, `rioxarray`)
+- Bash
+
+```bash
+# Ubuntu
+sudo apt-get install gdal-bin
+pip install xarray rioxarray
+```
+
+## Quickstart
+
+```bash
+cd examples/01-cog-creation
+chmod +x run.sh
+./run.sh
+```
+
+The scripts write to an `output/` directory next to each `run.sh`. Example 01 expects a source raster — point it at your own GeoTIFF (or drop one in as `data/input.tif`); it demonstrates DEFLATE vs. ZSTD compression and overview levels via `gdal_translate -of COG`.
 
 ## Patterns
 
-| # | Pattern | Description |
-|---|---------|-------------|
-| 1 | COG creation | Convert rasters to Cloud Optimized GeoTIFF with gdal_translate |
-| 2 | Validation | Verify COG compliance (layout, overviews, IFD) with gdalinfo |
-| 3 | TiTiler serving | Serve COGs as dynamic tiles via TiTiler |
-| 4 | Xarray integration | Open COGs lazily with xarray + rioxarray |
-| 5 | Performance | Benchmark COG vs raw GeoTIFF read patterns |
-| 6 | Full workflow | End-to-end: create, validate, serve, analyze |
+| # | Example | What it demonstrates |
+|---|---------|----------------------|
+| 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, overview levels |
+| 02 | `02-validation` | Validating COG compliance — layout, overviews, IFD structure with `gdalinfo` |
+| 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
+| 04 | `04-xarray-integration` | Lazy, windowed reads of COGs with xarray + rioxarray |
+| 05 | `05-performance` | Benchmarking COG vs. raw GeoTIFF read patterns |
+| 06 | `06-full-workflow` | End-to-end: create → validate → serve → analyze |
 
-## Requirements
+## Repository layout
 
-- GDAL >= 3.6
-- Python 3.11+
-- Shell (bash)
-- GDAL Python bindings (`pip install GDAL`)
+```
+cog-patterns/
+├── examples/
+│   ├── 01-cog-creation/run.sh
+│   ├── 02-validation/run.sh
+│   ├── 03-titiler-serving/run.sh
+│   ├── 04-xarray-integration/run.py
+│   ├── 05-performance/run.sh
+│   └── 06-full-workflow/run.sh
+├── tests/
+│   └── test_patterns.py     # every script exists and is non-empty
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── CONTRIBUTING.md
+```
 
-## Quick start
+## Validation
 
 ```bash
-# Install GDAL (Ubuntu)
-sudo apt-get install gdal-bin python3-gdal
-
-# Install Python deps
-pip install xarray rioxarray titiler rasterio
-
-# Run an example
-cd examples/01-cog-creation
-python create_cog.py
+pip install pytest
+pytest            # checks script presence and size
 ```
+
+CI runs `ruff check` / `ruff format --check` and the pytest suite on every push and pull request.
+
+## Roadmap
+
+- `rio-cogeo validate` as an alternative validation path
+- COG + STAC pairing walkthrough (see [stac-patterns](https://github.com/ZQM-Computing/stac-patterns) example 08)
+- Internal mask vs. sidecar mask trade-offs
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues to zqmcomputing@gmail.com — please do not open a public issue for those.
 
 ## More from this series
 
@@ -77,3 +112,8 @@ MIT — see LICENSE file.
 
 *Part of [ZQM Labs](https://github.com/ZQM-Computing) — games, gear & a little mischief.*
 
+*Part of [ZQM Computing](https://github.com/ZQM-Computing) — games, gear & a little mischief.*
+
+## License
+
+MIT — see [LICENSE](LICENSE).
