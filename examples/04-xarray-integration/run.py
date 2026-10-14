@@ -1,4 +1,5 @@
 """Example 04: Read COG with xarray."""
+
 import rioxarray  # noqa: F401 - registers the rio accessor
 import xarray as xr
 
