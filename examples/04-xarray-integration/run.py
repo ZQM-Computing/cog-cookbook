@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 """Example 04: Read COG with xarray."""
-import xarray as xr
 import rioxarray  # noqa: F401 - registers the rio accessor
+import xarray as xr
 
 # Open COG with xarray (via rioxarray)
 ds = xr.open_dataset("output/output_cog.tif", engine="rasterio")

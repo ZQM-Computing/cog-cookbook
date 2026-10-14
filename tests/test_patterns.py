@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Tests for cog-patterns."""
 import subprocess
 import sys
@@ -18,7 +17,8 @@ def test_python_syntax():
     py_file = EXAMPLES_DIR / "04-xarray-integration" / "run.py"
     result = subprocess.run(
         [sys.executable, "-m", "py_compile", str(py_file)],
-        capture_output=True
+        capture_output=True,
+        check=True,
     )
     assert result.returncode == 0, f"Syntax error in {py_file}"
 
