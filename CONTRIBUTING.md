@@ -1,6 +1,6 @@
-# Contributing to cog-patterns
+# Contributing to ZQM Computing
 
-Thank you for your interest in contributing!
+Thank you for your interest in contributing to ZQM Computing — geospatial patterns and tools.
 
 ## How to Contribute
 
@@ -13,12 +13,22 @@ Thank you for your interest in contributing!
 ## Code Standards
 
 - Follow existing code style
-- Add tests for new patterns
+- Add tests for new features
 - Update documentation as needed
-- Keep examples runnable with minimal setup
-- COG-specific: include `gdalinfo` validation in every new example
+- Keep commits atomic and descriptive
+- All repos are MIT-licensed unless otherwise noted
 
 ## Reporting Issues
 
 - Use GitHub Issues for bug reports
-- Include GDAL version, OS, and a minimal reproduction
+- Include steps to reproduce
+- Specify your environment (OS, version, etc)
+- For security vulnerabilities, see [SECURITY.md](SECURITY.md)
+
+## Questions?
+
+Open an issue or discussion in the repository.
+
+---
+
+*Part of the [ZQM Computing](https://github.com/ZQM-Computing) ecosystem — geospatial patterns and tools.*
