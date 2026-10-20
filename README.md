@@ -4,8 +4,7 @@
 <!-- markdownlint-disable MD033 -->
 <p align="center">
   <strong>ZQM Computing — Geospatial Engineering & Scientific Computing</strong><br>
-  <a href="https://github.com/ZQM-Computing">ZQM Computing</a> •
-  <a href="https://github.com/ZQM-Labs">ZQM Labs</a>
+  <a href="https://github.com/ZQM-Computing">ZQM Computing</a>
 </p>
 <!-- markdownlint-enable MD033 -->
 <!-- ZQM-END -->
@@ -122,68 +121,8 @@ For setup instructions, reproducible examples, data provenance, CRS/SRID assumpt
 
 The configured CI workflow is the source of truth for automated checks. A passing workflow establishes only that its checks passed for that commit; it does not certify production deployment or prove that every dependency and operating environment was covered.
 
-## Installation
-
-```bash
-pip install -e .
-```
-
-Requires Python 3.11+.
-
-## Usage
-
-This repository contains production-tested patterns for working with Cloud Optimized GeoTIFFs (COGs). Each pattern includes:
-
-- **Code examples** — Ready-to-use Python snippets
-- **Performance benchmarks** — Measured on real-world datasets
-- **Best practices** — Lessons learned from production deployments
-
-### Quick Start
-
-```python
-import rasterio
-from rasterio.shutil import copy
-
-# Open a COG and read a window
-with rasterio.open("example.tif") as src:
-    data = src.read(1, window=((0, 512), (0, 512)))
-    print(f"Shape: {data.shape}, dtype: {data.dtype}")
-```
-
-### Pattern Categories
-
-| Category | Description |
-|----------|-------------|
-| Reading | Efficient windowed reads and metadata access |
-| Writing | Creating optimized COGs with proper compression |
-| Processing | Parallel processing and cloud-native workflows |
-| Optimization | Tuning for performance and storage efficiency |
-
 ## License
 
 MIT — see LICENSE file.
 
-## Related repositories
-
-- [ZQM Geospatial Patterns](https://github.com/ZQM-Computing/geospatial-patterns) — umbrella index of all geospatial pattern repos
-- [postgis-patterns](https://github.com/ZQM-Computing/postgis-patterns) — production PostGIS patterns & best practices
-- [duckdb-spatial-patterns](https://github.com/ZQM-Computing/duckdb-spatial-patterns) — DuckDB Spatial patterns for analytical geospatial SQL
-- [geospatial-api-reference](https://github.com/ZQM-Computing/geospatial-api-reference) — OGC API - Features with FastAPI + PostGIS
-- [qgis-resources](https://github.com/ZQM-Computing/qgis-resources) — QGIS expressions, PyQGIS, styles, and QField guides
-- [proxmox-ceph-operations](https://github.com/ZQM-Computing/proxmox-ceph-operations) — Proxmox VE + Ceph operations runbooks
-- [ollama-fleet-patterns](https://github.com/ZQM-Computing/ollama-fleet-patterns) — Ollama fleet operations & a minimal RAG reference
-
 *Part of [ZQM Computing](https://github.com/ZQM-Computing) — geospatial engineering, scientific computing, and infrastructure patterns.*
-
-<!-- ZQM-FOOTER-START -->
-<!-- markdownlint-disable MD033 -->
----
-
-<p align="center">
-  <em>Play more. Plan less.</em><br>
-  <a href="https://zqmlabs.com">zqmlabs.com</a> •
-  <a href="https://github.com/ZQM-Labs">ZQM Labs</a> •
-  <a href="https://github.com/ZQM-Computing">ZQM Computing</a>
-</p>
-<!-- markdownlint-enable MD033 -->
-<!-- ZQM-FOOTER-END -->
