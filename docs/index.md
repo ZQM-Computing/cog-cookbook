@@ -1,11 +1,13 @@
 # Cloud Optimized GeoTIFF (COG) Patterns
 
 <!-- ZQM-START -->
+<!-- markdownlint-disable MD033 -->
 <p align="center">
   <strong>ZQM Computing — Geospatial Engineering & Scientific Computing</strong><br>
   <a href="https://github.com/ZQM-Computing">ZQM Computing</a> •
   <a href="https://github.com/ZQM-Labs">ZQM Labs</a>
 </p>
+<!-- markdownlint-enable MD033 -->
 <!-- ZQM-END -->
 
 [![CI](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml/badge.svg)](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml)
@@ -51,7 +53,7 @@ The scripts write to an `output/` directory next to each `run.sh`. Example 01 ex
 
 ## Repository layout
 
-```
+```text
 cog-patterns/
 ├── examples/
 │   ├── 01-cog-creation/run.sh
@@ -85,7 +87,7 @@ CI runs `ruff check` / `ruff format --check` and the pytest suite on every push 
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues to zqmcomputing@gmail.com — please do not open a public issue for those.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues to <zqmcomputing@gmail.com> — please do not open a public issue for those.
 
 ## More from this series
 
@@ -126,11 +128,8 @@ MIT — see LICENSE file.
 
 *Part of [ZQM Computing](https://github.com/ZQM-Computing) — geospatial engineering, scientific computing, and infrastructure patterns.*
 
-## License
-
-MIT — see [LICENSE](LICENSE).
-
 <!-- ZQM-FOOTER-START -->
+<!-- markdownlint-disable MD033 -->
 ---
 
 <p align="center">
@@ -139,4 +138,5 @@ MIT — see [LICENSE](LICENSE).
   <a href="https://github.com/ZQM-Labs">ZQM Labs</a> •
   <a href="https://github.com/ZQM-Computing">ZQM Computing</a>
 </p>
+<!-- markdownlint-enable MD033 -->
 <!-- ZQM-FOOTER-END -->
