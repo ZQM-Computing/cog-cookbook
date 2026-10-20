@@ -118,6 +118,37 @@ pip install -e .
 
 Requires Python 3.11+.
 
+
+## Usage
+
+This repository contains production-tested patterns for working with Cloud Optimized GeoTIFFs (COGs). Each pattern includes:
+
+- **Code examples** — Ready-to-use Python snippets
+- **Performance benchmarks** — Measured on real-world datasets
+- **Best practices** — Lessons learned from production deployments
+
+### Quick Start
+
+```python
+import rasterio
+from rasterio.shutil import copy
+
+# Open a COG and read a window
+with rasterio.open("example.tif") as src:
+    data = src.read(1, window=((0, 512), (0, 512)))
+    print(f"Shape: {data.shape}, dtype: {data.dtype}")
+```
+
+### Pattern Categories
+
+| Category | Description |
+|----------|-------------|
+| Reading | Efficient windowed reads and metadata access |
+| Writing | Creating optimized COGs with proper compression |
+| Processing | Parallel processing and cloud-native workflows |
+| Optimization | Tuning for performance and storage efficiency |
+
+
 ## License
 
 MIT — see LICENSE file.
