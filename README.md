@@ -72,7 +72,7 @@ cog-patterns/
 │   ├── 05-performance/run.sh
 │   └── 06-full-workflow/run.sh
 ├── tests/
-│   └── test_patterns.py    # every script exists and is non-empty
+│   └── test_patterns.py     # every script exists and is non-empty
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE
