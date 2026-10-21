@@ -72,7 +72,7 @@ cog-patterns/
 │   ├── 05-performance/run.sh
 │   └── 06-full-workflow/run.sh
 ├── tests/
-│   └── test_patterns.py     # every script exists and is non-empty
+│   └── test_patterns.py    # every script exists and is non-empty
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE
@@ -96,7 +96,7 @@ CI runs `ruff check` / `ruff format --check` and the pytest suite on every push 
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues to <zqmcomputing@gmail.com> — please do not open a public issue for those.
+See [CONTRIBUTING.md](https://github.com/ZQM-Computing/cog-patterns/blob/main/CONTRIBUTING.md). Report security issues to <zqmcomputing@gmail.com> — please do not open a public issue for those.
 
 ## More from this series
 
