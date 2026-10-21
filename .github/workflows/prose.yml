@@ -20,6 +20,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          args: --verbose '**/*.md'
+          go-version: stable
+      - name: Install lychee
+        run: go install github.com/lycheeverse/lychee@v0.24.2
+      - name: Check links
+        shell: bash
+        run: lychee --no-progress --verbose '**/*.md'
