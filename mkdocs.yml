@@ -6,6 +6,7 @@ repo_url: https://github.com/ZQM-Computing/cog-patterns
 
 theme:
   name: material
+  custom_dir: docs/overrides
   features:
     - navigation.tabs
     - navigation.sections
