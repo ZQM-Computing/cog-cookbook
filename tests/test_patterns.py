@@ -1,4 +1,4 @@
-"""Tests for cog-patterns."""
+"""Tests for cog-cookbook."""
 
 import subprocess
 import sys
