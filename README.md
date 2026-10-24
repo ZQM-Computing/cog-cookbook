@@ -9,6 +9,7 @@
 <!-- markdownlint-enable MD033 -->
 <!-- ZQM-END -->
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![GitHub](https://img.shields.io/github/stars/ZQM-Computing/cog-cookbook?style=social)
 [![CI](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml/badge.svg)](https://github.com/ZQM-Computing/cog-patterns/actions/workflows/ci.yml)
 
 Production-tested Cloud Optimized GeoTIFF patterns for cloud-native raster access, serving, and analysis — create them, validate them, serve them as tiles, and read them lazily.
