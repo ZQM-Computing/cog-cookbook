@@ -109,6 +109,9 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     run("01-cog-creation")
     assert (work_examples / "01-cog-creation/output/output_cog.tif").is_file()
     run("02-validation")
+    performance_cog = work_examples / "05-performance/output/output_cog.tif"
+    performance_cog.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(work_examples / "01-cog-creation/output/output_cog.tif", performance_cog)
     run("05-performance")
     run("06-full-workflow")
     assert (work_examples / "06-full-workflow/output/output_cog.tif").is_file()
