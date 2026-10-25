@@ -106,12 +106,37 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
             timeout=120,
         )
 
+    def raster_info(path: Path) -> dict:
+        result = subprocess.run(
+            ["gdalinfo", "-json", str(path)],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        import json
+
+        return json.loads(result.stdout)
+
+    def assert_valid_raster(path: Path) -> dict:
+        assert path.is_file() and path.stat().st_size > 0, f"Missing or empty raster: {path}"
+        info = raster_info(path)
+        assert info.get("size") == [512, 512], f"Unexpected raster dimensions: {path}"
+        assert len(info.get("bands", [])) == 1, f"Unexpected band count: {path}"
+        assert info.get("coordinateSystem", {}).get("wkt"), f"Missing CRS: {path}"
+        return info
+
     run("01-cog-creation")
-    assert (work_examples / "01-cog-creation/output/output_cog.tif").is_file()
+    first_cog = work_examples / "01-cog-creation/output/output_cog.tif"
+    assert_valid_raster(first_cog)
     run("02-validation")
     performance_cog = work_examples / "05-performance/output/output_cog.tif"
     performance_cog.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(work_examples / "01-cog-creation/output/output_cog.tif", performance_cog)
+    shutil.copy2(first_cog, performance_cog)
     run("05-performance")
     run("06-full-workflow")
-    assert (work_examples / "06-full-workflow/output/output_cog.tif").is_file()
+    final_cog = work_examples / "06-full-workflow/output/output_cog.tif"
+    assert_valid_raster(final_cog)
+    vrt = work_examples / "06-full-workflow/output/output_cog.vrt"
+    assert vrt.is_file() and vrt.stat().st_size > 0
+    assert_valid_raster(vrt)
