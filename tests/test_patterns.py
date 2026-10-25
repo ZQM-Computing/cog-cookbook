@@ -147,9 +147,27 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
 
     assert image_structure(creation_dir / "output_cog.tif").get("COMPRESSION") == "DEFLATE"
     assert image_structure(creation_dir / "output_zstd.tif").get("COMPRESSION") == "ZSTD"
-    overview_info = raster_info(creation_dir / "output_overviews.tif")
-    assert any(band.get("overviews") for band in overview_info.get("bands", [])), (
-        "output_overviews.tif must contain internal overview levels"
+    overview_path = creation_dir / "output_overviews.tif"
+    overview_info = raster_info(overview_path)
+    assert_cog_layout(overview_path)
+    assert image_structure(overview_path).get("COMPRESSION") == "DEFLATE"
+    overview_sizes = overview_info.get("bands", [{}])[0].get("overviews", [])
+    assert len(overview_sizes) >= 2, (
+        f"Expected a useful internal overview pyramid, found {overview_sizes}"
+    )
+    previous_size = 512
+    for overview in overview_sizes:
+        size = overview.get("size")
+        assert isinstance(size, list) and len(size) == 2 and all(
+            isinstance(dimension, int) and dimension > 0 for dimension in size
+        ), f"Invalid overview dimensions: {overview}"
+        assert size[0] < previous_size and size[1] < previous_size, (
+            f"Overview dimensions must descend from the full-resolution raster: {overview_sizes}"
+        )
+        assert size[0] == size[1], f"Expected square overviews for the square synthetic raster: {size}"
+        previous_size = size[0]
+    assert overview_sizes[-1]["size"][0] <= 128, (
+        f"Expected the pyramid to reach a small overview level for 512x512 input: {overview_sizes}"
     )
     run("02-validation")
     performance_cog = work_examples / "05-performance/output/output_cog.tif"
