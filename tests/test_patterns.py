@@ -141,6 +141,16 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     assert_valid_raster(first_cog)
     for filename in ("output_cog.tif", "output_zstd.tif", "output_overviews.tif"):
         assert_cog_layout(creation_dir / filename)
+
+    def image_structure(path: Path) -> dict:
+        return raster_info(path).get("metadata", {}).get("IMAGE_STRUCTURE", {})
+
+    assert image_structure(creation_dir / "output_cog.tif").get("COMPRESSION") == "DEFLATE"
+    assert image_structure(creation_dir / "output_zstd.tif").get("COMPRESSION") == "ZSTD"
+    overview_info = raster_info(creation_dir / "output_overviews.tif")
+    assert any(band.get("overviews") for band in overview_info.get("bands", [])), (
+        "output_overviews.tif must contain internal overview levels"
+    )
     run("02-validation")
     performance_cog = work_examples / "05-performance/output/output_cog.tif"
     performance_cog.parent.mkdir(parents=True, exist_ok=True)
