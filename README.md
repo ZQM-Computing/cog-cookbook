@@ -91,11 +91,13 @@ cog-cookbook/
 ## Validation
 
 ```bash
-python -m pip install pytest
+python -m pip install pytest ruff
+python -m ruff check examples tests
+python -m ruff format --check examples tests
 python -m pytest -q
 ```
 
-The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
+The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
 
 ## Roadmap
 
