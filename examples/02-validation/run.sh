@@ -1,25 +1,35 @@
 #!/bin/bash
-# Example 02: Validate Cloud Optimized GeoTIFF
-set -e
+# Example 02: Inspect and validate a Cloud Optimized GeoTIFF
+set -euo pipefail
 
-INPUT_DIR="$(dirname "$0")/data"
-OUTPUT_DIR="$(dirname "$0")/output"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+INPUT_DIR="$SCRIPT_DIR/data"
+INPUT_TIF="${COG_FILE:-$INPUT_DIR/input.tif}"
+OUTPUT_DIR="$SCRIPT_DIR/output"
 mkdir -p "$OUTPUT_DIR"
 
-echo "=== Validate COG structure ==="
-gdalinfo "$INPUT_DIR/input.tif" | grep -E "Driver|Size is|Origin is|Pixel Size|Metadata"
+if [[ ! -f "$INPUT_TIF" ]]; then
+  echo "Input raster not found: $INPUT_TIF" >&2
+  echo "Set COG_FILE=/path/to/raster.tif or place input.tif in $INPUT_DIR." >&2
+  exit 2
+fi
 
-echo "=== Check for COG-specific features ==="
-gdalinfo "$INPUT_DIR/input.tif" | grep -i "cloud optimized" || echo "Not a COG"
+echo "=== Inspect raster metadata ==="
+gdalinfo "$INPUT_TIF" | grep -E "Driver|Size is|Origin is|Pixel Size|Metadata" || true
 
-echo "=== Validate with gdalinfo JSON ==="
-gdalinfo -json "$INPUT_DIR/input.tif" | python3 -c "
+echo "=== Inspect COG layout metadata ==="
+gdalinfo "$INPUT_TIF" | grep -i "cloud optimized" || echo "GDAL did not report explicit COG layout metadata; inspect block layout and overviews below."
+
+echo "=== Parse GDAL JSON metadata ==="
+gdalinfo -json "$INPUT_TIF" | python3 -c '
 import json, sys
 data = json.load(sys.stdin)
-print(f'Driver: {data.get(\"driverShortName\", \"unknown\")}')
-print(f'Size: {data.get(\"size\", [])}')
-print(f'CRS: {data.get(\"coordinateSystem\", {}).get(\"wkt\", \"unknown\")[:50]}...')
-"
+print(f"Driver: {data.get('driverShortName', 'unknown')}")
+print(f"Size: {data.get('size', [])}")
+print(f"CRS present: {bool(data.get('coordinateSystem', {}).get('wkt'))}")
+print(f"Band count: {len(data.get('bands', []))}")
+'
 
-echo "=== Compare file sizes ==="
-ls -lh "$INPUT_DIR/input.tif" "$OUTPUT_DIR/output_cog.tif"
+echo "=== File and overview summary ==="
+ls -lh "$INPUT_TIF"
+gdalinfo "$INPUT_TIF" | grep -E "Overviews:|Block=" || true
