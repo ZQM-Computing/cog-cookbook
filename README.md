@@ -62,7 +62,7 @@ bash examples/01-cog-creation/run.sh
 
 | # | Example | What it demonstrates |
 |---|---------|----------------------|
-| 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, overview levels |
+| 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, forced internal overviews for small inputs |
 | 02 | `02-validation` | Validating COG compliance — layout, overviews, IFD structure with `gdalinfo` |
 | 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
 | 04 | `04-xarray-integration` | Lazy, windowed reads of COGs with xarray + rioxarray |

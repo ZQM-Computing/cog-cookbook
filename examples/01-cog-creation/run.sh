@@ -14,8 +14,9 @@ echo "=== Create COG with ZSTD compression ==="
 gdal_translate -of COG -co COMPRESS=ZSTD -co BIGTIFF=YES \
   "$INPUT_DIR/input.tif" "$OUTPUT_DIR/output_zstd.tif"
 
-echo "=== Create COG with overview levels ==="
-gdal_translate -of COG -co COMPRESS=DEFLATE -co OVERVIEWS=AUTO \
+echo "=== Create COG with internal overview levels ==="
+# Use smaller tiles so this 512x512 demo visibly produces internal overview levels.
+gdal_translate -of COG -co COMPRESS=DEFLATE -co BLOCKSIZE=128 -co OVERVIEWS=IGNORE_EXISTING \
   "$INPUT_DIR/input.tif" "$OUTPUT_DIR/output_overviews.tif"
 
 echo "=== Verify COG structure ==="
