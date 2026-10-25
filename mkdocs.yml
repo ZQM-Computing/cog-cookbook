@@ -1,6 +1,6 @@
 site_name: COG Patterns
 site_url: https://cog.zqmlabs.com/
-site_description: Cloud Optimized GeoTIFF patterns — creation, validation, serving, and analysis.
+site_description: Cloud Optimized GeoTIFF (COG) examples for raster creation, validation, cloud-native access, TiTiler serving, and xarray analysis.
 site_author: ZQM Computing
 repo_url: https://github.com/ZQM-Computing/cog-cookbook
 
