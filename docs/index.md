@@ -1,4 +1,4 @@
-# Cloud Optimized GeoTIFF (COG) Patterns
+# Cloud Optimized GeoTIFF (COG) Cookbook
 
 <!-- ZQM-START -->
 <!-- markdownlint-disable MD033 -->
@@ -12,7 +12,7 @@
 
 [![CI](https://github.com/ZQM-Computing/cog-cookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/ZQM-Computing/cog-cookbook/actions/workflows/ci.yml)
 
-Production-tested Cloud Optimized GeoTIFF patterns for cloud-native raster access, serving, and analysis — create them, validate them, serve them as tiles, and read them lazily.
+Runnable reference examples for creating and inspecting Cloud Optimized GeoTIFFs (COGs), serving them with TiTiler, and reading them with xarray. CI executes deterministic local raster examples; remote serving and xarray integration have separate prerequisites.
 
 ## Who this is for
 
@@ -38,7 +38,7 @@ chmod +x run.sh
 ./run.sh
 ```
 
-The scripts write to an `output/` directory next to each `run.sh`. Example 01 expects a source raster — point it at your own GeoTIFF (or drop one in as `data/input.tif`); it demonstrates DEFLATE vs. ZSTD compression and overview levels via `gdal_translate -of COG`.
+Example 01 expects `examples/01-cog-creation/data/input.tif`. Create a small synthetic raster with `gdal_create` or provide your own GeoTIFF. Examples write outputs beside their scripts.
 
 ## Patterns
 
@@ -63,7 +63,7 @@ cog-cookbook/
 │   ├── 05-performance/run.sh
 │   └── 06-full-workflow/run.sh
 ├── tests/
-│   └── test_patterns.py     # every script exists and is non-empty
+│   └── test_patterns.py     # inventory, shell syntax, and GDAL runtime checks
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE
@@ -77,7 +77,7 @@ pip install pytest
 pytest            # checks script presence and size
 ```
 
-CI runs `ruff check` / `ruff format --check` and the pytest suite on every push and pull request.
+CI installs `gdal-bin` and executes examples 01, 02, 05, and 06 against a generated synthetic raster. TiTiler serving is documented but not started in CI; the xarray example is syntax-checked and requires its optional runtime dependencies.
 
 ## Roadmap
 
