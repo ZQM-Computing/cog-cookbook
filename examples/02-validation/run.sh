@@ -21,14 +21,7 @@ echo "=== Inspect COG layout metadata ==="
 gdalinfo "$INPUT_TIF" | grep -i "cloud optimized" || echo "GDAL did not report explicit COG layout metadata; inspect block layout and overviews below."
 
 echo "=== Parse GDAL JSON metadata ==="
-gdalinfo -json "$INPUT_TIF" | python3 -c '
-import json, sys
-data = json.load(sys.stdin)
-print(f"Driver: {data.get('driverShortName', 'unknown')}")
-print(f"Size: {data.get('size', [])}")
-print(f"CRS present: {bool(data.get('coordinateSystem', {}).get('wkt'))}")
-print(f"Band count: {len(data.get('bands', []))}")
-'
+gdalinfo -json "$INPUT_TIF" | python3 -c 'import json, sys; d=json.load(sys.stdin); print("Driver:", d.get("driverShortName", "unknown")); print("Size:", d.get("size", [])); print("CRS present:", bool(d.get("coordinateSystem", {}).get("wkt"))); print("Band count:", len(d.get("bands", [])))'
 
 echo "=== File and overview summary ==="
 ls -lh "$INPUT_TIF"
