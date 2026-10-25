@@ -152,14 +152,14 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     assert_cog_layout(overview_path)
     assert image_structure(overview_path).get("COMPRESSION") == "DEFLATE"
     overview_sizes = overview_info.get("bands", [{}])[0].get("overviews", [])
-    assert len(overview_sizes) >= 2, (
-        f"Expected a useful internal overview pyramid, found {overview_sizes}"
-    )
+    assert len(overview_sizes) >= 2, f"Expected a useful internal overview pyramid, found {overview_sizes}"
     previous_size = 512
     for overview in overview_sizes:
         size = overview.get("size")
-        assert isinstance(size, list) and len(size) == 2 and all(
-            isinstance(dimension, int) and dimension > 0 for dimension in size
+        assert (
+            isinstance(size, list)
+            and len(size) == 2
+            and all(isinstance(dimension, int) and dimension > 0 for dimension in size)
         ), f"Invalid overview dimensions: {overview}"
         assert size[0] < previous_size and size[1] < previous_size, (
             f"Overview dimensions must descend from the full-resolution raster: {overview_sizes}"
