@@ -1,6 +1,3 @@
-Title: Cloud Optimized GeoTIFF (COG) Cookbook
-Description: Cloud Optimized GeoTIFF (COG) examples for raster creation, validation, cloud-native access, TiTiler serving, and xarray analysis.
-
 # Cloud Optimized GeoTIFF (COG) Cookbook
 
 <!-- ZQM-START -->
