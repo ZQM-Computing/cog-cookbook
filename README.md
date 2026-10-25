@@ -12,7 +12,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![GitHub](https://img.shields.io/github/stars/ZQM-Computing/cog-cookbook?style=social)
 [![CI](https://github.com/ZQM-Computing/cog-cookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/ZQM-Computing/cog-cookbook/actions/workflows/ci.yml)
 
-Runnable Cloud Optimized GeoTIFF (COG) examples for creating, inspecting, and validating cloud-friendly raster data, with optional TiTiler serving and xarray analysis. Local synthetic raster checks run in CI; remote services and additional integrations have separate setup requirements.
+A **Cloud Optimized GeoTIFF (COG) cookbook** for creating, inspecting, validating, and serving cloud-friendly raster imagery. Examples cover raster layout checks, local synthetic fixtures, optional TiTiler tile serving, and xarray-based analysis. It is intended for GIS analysts, remote-sensing practitioners, and geospatial data engineers; remote services and production object storage require separate setup and validation.
 
 ## Repository role and status
 
