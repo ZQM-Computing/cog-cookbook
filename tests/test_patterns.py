@@ -126,9 +126,21 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
         assert info.get("coordinateSystem", {}).get("wkt"), f"Missing CRS: {path}"
         return info
 
+    def assert_cog_layout(path: Path) -> None:
+        """Reject a readable GeoTIFF that does not report the COG layout."""
+        info = raster_info(path)
+        image_structure = info.get("metadata", {}).get("IMAGE_STRUCTURE", {})
+        assert image_structure.get("LAYOUT") == "COG", (
+            f"Expected GDAL to identify {path} as a Cloud Optimized GeoTIFF; "
+            f"IMAGE_STRUCTURE metadata: {image_structure}"
+        )
+
     run("01-cog-creation")
-    first_cog = work_examples / "01-cog-creation/output/output_cog.tif"
+    creation_dir = work_examples / "01-cog-creation/output"
+    first_cog = creation_dir / "output_cog.tif"
     assert_valid_raster(first_cog)
+    for filename in ("output_cog.tif", "output_zstd.tif", "output_overviews.tif"):
+        assert_cog_layout(creation_dir / filename)
     run("02-validation")
     performance_cog = work_examples / "05-performance/output/output_cog.tif"
     performance_cog.parent.mkdir(parents=True, exist_ok=True)
@@ -137,6 +149,7 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     run("06-full-workflow")
     final_cog = work_examples / "06-full-workflow/output/output_cog.tif"
     assert_valid_raster(final_cog)
+    assert_cog_layout(final_cog)
     vrt = work_examples / "06-full-workflow/output/output_cog.vrt"
     assert vrt.is_file() and vrt.stat().st_size > 0
     assert_valid_raster(vrt)
