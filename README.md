@@ -63,7 +63,7 @@ bash examples/01-cog-creation/run.sh
 | # | Example | What it demonstrates |
 |---|---------|----------------------|
 | 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, forced internal overviews for small inputs |
-| 02 | `02-validation` | Validating COG compliance — layout, overviews, IFD structure with `gdalinfo` |
+| 02 | `02-validation` | Fail-closed COG validation using GDAL JSON metadata: GeoTIFF driver, dimensions, bands, CRS, and explicit COG layout |
 | 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
 | 04 | `04-xarray-integration` | Lazy, windowed reads of COGs with xarray + rioxarray |
 | 05 | `05-performance` | Benchmarking COG vs. raw GeoTIFF read patterns |
@@ -97,7 +97,7 @@ python -m ruff format --check examples tests
 python -m pytest -q
 ```
 
-The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
+The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. Example 02 exits nonzero when GDAL cannot positively identify the input as a COG; it is a local metadata gate, not a substitute for independent conformance validation or remote HTTP range-request testing. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
 
 ## Roadmap
 
