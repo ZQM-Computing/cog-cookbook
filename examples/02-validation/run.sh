@@ -1,5 +1,5 @@
-#!/bin/bash
-# Example 02: Inspect and validate a Cloud Optimized GeoTIFF
+#!/usr/bin/env bash
+# Example 02: Inspect and strictly validate a Cloud Optimized GeoTIFF.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,18 +10,59 @@ mkdir -p "$OUTPUT_DIR"
 
 if [[ ! -f "$INPUT_TIF" ]]; then
   echo "Input raster not found: $INPUT_TIF" >&2
-  echo "Set COG_FILE=/path/to/raster.tif or place input.tif in $INPUT_DIR." >&2
+  echo "Set COG_FILE=/path/to/a/COG.tif or place input.tif in $INPUT_DIR." >&2
   exit 2
 fi
 
-echo "=== Inspect raster metadata ==="
-gdalinfo "$INPUT_TIF" | grep -E "Driver|Size is|Origin is|Pixel Size|Metadata" || true
+echo "=== Inspect and validate COG metadata ==="
+python3 - "$INPUT_TIF" <<'PY'
+import json
+import subprocess
+import sys
 
-echo "=== Inspect COG layout metadata ==="
-gdalinfo "$INPUT_TIF" | grep -i "cloud optimized" || echo "GDAL did not report explicit COG layout metadata; inspect block layout and overviews below."
+path = sys.argv[1]
+result = subprocess.run(
+    ["gdalinfo", "-json", path],
+    check=True,
+    capture_output=True,
+    text=True,
+)
+info = json.loads(result.stdout)
+metadata = info.get("metadata", {})
+image_structure = metadata.get("IMAGE_STRUCTURE", {})
+size = info.get("size", [])
+bands = info.get("bands", [])
+crs_present = bool(info.get("coordinateSystem", {}).get("wkt"))
 
-echo "=== Parse GDAL JSON metadata ==="
-gdalinfo -json "$INPUT_TIF" | python3 -c 'import json, sys; d=json.load(sys.stdin); print("Driver:", d.get("driverShortName", "unknown")); print("Size:", d.get("size", [])); print("CRS present:", bool(d.get("coordinateSystem", {}).get("wkt"))); print("Band count:", len(d.get("bands", [])))'
+print(f"File: {path}")
+print(f"Driver: {info.get('driverShortName', 'unknown')}")
+print(f"Size: {size}")
+print(f"CRS present: {crs_present}")
+print(f"Band count: {len(bands)}")
+print(f"Image structure: {image_structure}")
+
+issues = []
+if info.get("driverShortName") != "GTiff":
+    issues.append("dataset driver is not GTiff")
+if not (isinstance(size, list) and len(size) == 2 and all(isinstance(n, int) and n > 0 for n in size)):
+    issues.append("raster dimensions are missing or invalid")
+if not bands:
+    issues.append("raster has no bands")
+if not crs_present:
+    issues.append("CRS metadata is missing")
+if image_structure.get("LAYOUT") != "COG":
+    issues.append(
+        "GDAL does not identify this file as a COG (IMAGE_STRUCTURE.LAYOUT != COG)"
+    )
+
+if issues:
+    print("COG validation FAILED:", file=sys.stderr)
+    for issue in issues:
+        print(f"  - {issue}", file=sys.stderr)
+    sys.exit(1)
+
+print("COG validation PASSED.")
+PY
 
 echo "=== File and overview summary ==="
 ls -lh "$INPUT_TIF"
