@@ -1,5 +1,6 @@
 """Structural and runtime tests for the COG cookbook examples."""
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -170,6 +171,18 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
         f"Expected the pyramid to reach a small overview level for 512x512 input: {overview_sizes}"
     )
     # The validation example must receive the generated COG, not the source GeoTIFF.\n    shutil.copy2(first_cog, work_examples / "02-validation/data/input.tif")\n    run("02-validation")
+    invalid_env = os.environ.copy()
+    invalid_env["COG_FILE"] = str(source)
+    rejected = subprocess.run(
+        ["bash", str(work_examples / "02-validation/run.sh")],
+        cwd=tmp_path,
+        env=invalid_env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert rejected.returncode != 0, "The validator must reject a plain source GeoTIFF."
+    assert "COG validation FAILED" in rejected.stderr
     performance_cog = work_examples / "05-performance/output/output_cog.tif"
     performance_cog.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(first_cog, performance_cog)
