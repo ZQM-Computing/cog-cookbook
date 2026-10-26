@@ -175,6 +175,7 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     invalid_env["COG_FILE"] = str(source)
     rejected = subprocess.run(
         ["bash", str(work_examples / "02-validation/run.sh")],
+        check=False,
         cwd=tmp_path,
         env=invalid_env,
         capture_output=True,
