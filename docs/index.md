@@ -43,7 +43,7 @@ Example 01 expects `examples/01-cog-creation/data/input.tif`. Create a small syn
 ## Patterns
 
 | # | Example | What it demonstrates |
-|---|---------|----------------------|
+| --- | --------- | ---------------------- |
 | 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, overview levels |
 | 02 | `02-validation` | Validating COG compliance — layout, overviews, IFD structure with `gdalinfo` |
 | 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
