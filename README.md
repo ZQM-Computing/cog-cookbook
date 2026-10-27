@@ -61,7 +61,7 @@ bash examples/01-cog-creation/run.sh
 ## Patterns
 
 | # | Example | What it demonstrates |
-|---|---------|----------------------|
+| --- | --------- | ---------------------- |
 | 01 | `01-cog-creation` | Creating COGs with `gdal_translate -of COG`: DEFLATE vs. ZSTD, forced internal overviews for small inputs |
 | 02 | `02-validation` | Fail-closed COG validation using GDAL JSON metadata: GeoTIFF driver, dimensions, bands, CRS, and explicit COG layout |
 | 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
