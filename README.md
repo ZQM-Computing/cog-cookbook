@@ -66,7 +66,7 @@ bash examples/01-cog-creation/run.sh
 | 02 | `02-validation` | Fail-closed COG validation using GDAL JSON metadata: GeoTIFF driver, dimensions, bands, CRS, and explicit COG layout |
 | 03 | `03-titiler-serving` | Serving COGs as dynamic map tiles with TiTiler |
 | 04 | `04-xarray-integration` | Lazy, windowed reads of COGs with xarray + rioxarray |
-| 05 | `05-performance` | Benchmarking COG vs. raw GeoTIFF read patterns |
+| 05 | `05-performance` | Indicative local full-raster and windowed reads, with source-vs-COG pixel-checksum equivalence checks |
 | 06 | `06-full-workflow` | End-to-end: create → validate → serve → analyze |
 
 ## Repository layout
@@ -97,7 +97,7 @@ python -m ruff format --check examples tests
 python -m pytest -q
 ```
 
-The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. Example 02 exits nonzero when GDAL cannot positively identify the input as a COG; it is a local metadata gate, not a substitute for independent conformance validation or remote HTTP range-request testing. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
+The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. Example 05 compares GDAL band checksums for full and windowed local reads from the source GeoTIFF and generated COG, and verifies that the requested window is narrower than the full raster; its timings remain illustrative rather than a controlled benchmark. Example 02 exits nonzero when GDAL cannot positively identify the input as a COG; it is a local metadata gate, not a substitute for independent conformance validation or remote HTTP range-request testing. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
 
 ## Roadmap
 
