@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Compare a local synthetic source GeoTIFF with a generated COG.
 
 Usage:
@@ -33,7 +32,7 @@ def _info(path: Path) -> dict:
     )
     data = json.loads(result.stdout)
     if not isinstance(data, dict):
-        raise ValueError("gdalinfo output is not a JSON object")
+        raise TypeError("gdalinfo output is not a JSON object")
     return data
 
 
@@ -69,7 +68,7 @@ def _overview_sizes(band: dict, full: list[int]) -> list[list[int]]:
     width, height = full
     for item in values:
         if not isinstance(item, dict):
-            raise ValueError("Malformed overview metadata")
+            raise TypeError("Malformed overview metadata")
         size = _positive_size(item)
         if size[0] >= width or size[1] >= height:
             raise ValueError("COG overview dimensions must decrease")
@@ -105,7 +104,7 @@ def analyze(source: Path, cog: Path) -> dict:
     report_bands = []
     for number, (source_band, cog_band) in enumerate(zip(bands_a, bands_b), 1):
         if not isinstance(source_band, dict) or not isinstance(cog_band, dict):
-            raise ValueError("Invalid band metadata")
+            raise TypeError("Invalid band metadata")
         checksum_a = source_band.get("checksum")
         checksum_b = cog_band.get("checksum")
         if type(checksum_a) is not int or type(checksum_b) is not int or checksum_a != checksum_b:
@@ -162,7 +161,7 @@ def main() -> None:
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")
         print(content, end="")
-    except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+    except (OSError, TypeError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         parser.error(str(exc))
 
 
