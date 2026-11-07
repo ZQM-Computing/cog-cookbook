@@ -68,6 +68,11 @@ bash examples/01-cog-creation/run.sh
 | 04 | `04-xarray-integration` | Lazy, windowed reads of COGs with xarray + rioxarray |
 | 05 | `05-performance` | Indicative local full-raster and windowed reads, with source-vs-COG pixel-checksum equivalence checks |
 | 06 | `06-full-workflow` | End-to-end: create → validate → serve → analyze |
+| 07 | `07-source-cog-integrity` | Fail-closed synthetic GeoTIFF → COG comparison with source/COG hashes, CRS, geotransform, pixel checksums and overview evidence |
+
+## Did raster conversion preserve values and location?
+
+The [source-versus-COG integrity walkthrough](docs/source-vs-cog-integrity.md) provides a **seventh executable recipe** that compares local synthetic source/COG pixel checksums, CRS/geotransform, band types, nodata metadata, sizes, SHA-256 provenance and strictly descending internal overviews. Its JSON output is evidence about a local fixture only—not a cloud range-request benchmark, bitwise proof for every raster type, or an environmental risk finding. Run it after Example 01 with Python 3.11+ and GDAL.
 
 ## Repository layout
 
@@ -79,9 +84,11 @@ cog-cookbook/
 │   ├── 03-titiler-serving/run.sh
 │   ├── 04-xarray-integration/run.py
 │   ├── 05-performance/run.sh
-│   └── 06-full-workflow/run.sh
+│   ├── 06-full-workflow/run.sh
+│   └── 07-source-cog-integrity/run.py
 ├── tests/
-│   └── test_patterns.py     # every script exists and is non-empty
+│   ├── test_patterns.py     # inventory, runtime GDAL smoke tests
+│   └── test_cog_integrity.py # metadata failure-path tests
 ├── pyproject.toml
 ├── README.md
 ├── LICENSE
@@ -97,7 +104,7 @@ python -m ruff format --check examples tests
 python -m pytest -q
 ```
 
-The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. Example 05 compares GDAL band checksums for full and windowed local reads from the source GeoTIFF and generated COG, and verifies that the requested window is narrower than the full raster; its timings remain illustrative rather than a controlled benchmark. Example 02 exits nonzero when GDAL cannot positively identify the input as a COG; it is a local metadata gate, not a substitute for independent conformance validation or remote HTTP range-request testing. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
+The suite checks the exact example inventory, shell syntax, Python syntax, and repository metadata. CI also enforces Ruff lint and formatting checks across `examples/` and `tests/`. When GDAL CLI tools are installed, it also creates a synthetic raster and executes examples 01, 02, 05, and 06, checking key output artifacts and raster metadata. Example 07 additionally compares local source/COG evidence and rejects ordinary GeoTIFF outputs or mismatched raster properties. Example 05 compares GDAL band checksums for full and windowed local reads from the source GeoTIFF and generated COG, and verifies that the requested window is narrower than the full raster; its timings remain illustrative rather than a controlled benchmark. Example 02 exits nonzero when GDAL cannot positively identify the input as a COG; it is a local metadata gate, not a substitute for independent conformance validation or remote HTTP range-request testing. CI installs `gdal-bin` and runs this integration path. The TiTiler example documents server invocation but does not launch a service in CI; the xarray example is syntax-checked only and requires its documented Python dependencies and a prepared COG for runtime use.
 
 ## Roadmap
 
