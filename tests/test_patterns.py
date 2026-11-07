@@ -16,6 +16,7 @@ EXPECTED_EXAMPLES = {
     "04-xarray-integration",
     "05-performance",
     "06-full-workflow",
+    "07-source-cog-integrity",
 }
 
 
@@ -41,6 +42,8 @@ def test_python_example_has_valid_syntax():
     """Compile Python in memory without writing __pycache__ artifacts."""
     source = (EXAMPLES_DIR / "04-xarray-integration" / "run.py").read_text(encoding="utf-8")
     compile(source, "examples/04-xarray-integration/run.py", "exec")
+    evidence_source = (EXAMPLES_DIR / "07-source-cog-integrity" / "run.py").read_text(encoding="utf-8")
+    compile(evidence_source, "examples/07-source-cog-integrity/run.py", "exec")
 
 
 def test_readme_and_license_exist():
@@ -197,3 +200,42 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     vrt = work_examples / "06-full-workflow/output/output_cog.vrt"
     assert vrt.is_file() and vrt.stat().st_size > 0
     assert_valid_raster(vrt)
+    # Reuse the actual synthetic source and the validated multi-overview COG.
+    evidence = tmp_path / "cog-integrity.json"
+    result = subprocess.run(
+        [
+            "python3",
+            str(work_examples / "07-source-cog-integrity/run.py"),
+            str(source),
+            str(overview_path),
+            "--output",
+            str(evidence),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+    import json
+
+    report = json.loads(result.stdout)
+    assert json.loads(evidence.read_text(encoding="utf-8")) == report
+    assert report["status"] == "local_synthetic_cog_integrity_smoke_only"
+    assert report["source_bytes"] > 0 and report["cog_bytes"] > 0
+    assert report["raster_size"] == [512, 512]
+    assert report["band_count"] == 1
+    assert len(report["bands"][0]["overview_sizes"]) >= 2
+    assert report["crs_metadata_equal"] is True
+    assert report["geotransform_equal_within_1e-10"] is True
+    assert report["source_sha256"] != report["cog_sha256"]
+
+    invalid = subprocess.run(
+        ["python3", str(work_examples / "07-source-cog-integrity/run.py"), str(source), str(source)],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+    assert invalid.returncode != 0
+    assert "does not identify the output as COG" in invalid.stderr
+
