@@ -238,4 +238,3 @@ def test_core_raster_examples_execute_with_synthetic_input(tmp_path):
     )
     assert invalid.returncode != 0
     assert "does not identify the output as COG" in invalid.stderr
-
