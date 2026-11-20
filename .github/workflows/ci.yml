@@ -59,23 +59,26 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      # Use a job-local environment: self-hosted runners need no root or sudo.
+      - name: Set up Python and GDAL
+        uses: mamba-org/setup-micromamba@add3a49764cedee8ee24e82dfde87f5bc2914462 # v2
         with:
-          python-version: "3.12"
-      - name: Install GDAL command-line tools
-        run: |
-          privilege=()
-          if [ "$(id -u)" -ne 0 ]; then
-            if ! command -v sudo >/dev/null 2>&1; then
-              echo "Installing GDAL requires root or noninteractive sudo." >&2
-              exit 1
-            fi
-            privilege=(sudo -n)
-          fi
-          "${privilege[@]}" apt-get update
-          "${privilege[@]}" apt-get install --yes gdal-bin
+          micromamba-version: '2.0.5-0'
+          environment-name: ci
+          create-args: >-
+            python=3.12
+            pip
+            gdal>=3.6
+          micromamba-root-path: ${{ runner.temp }}/micromamba
+          micromamba-binary-path: ${{ runner.temp }}/micromamba-bin/micromamba
+          init-shell: none
+          post-cleanup: all
       - name: Install and test
+        shell: micromamba-shell {0}
         run: |
+          set -euo pipefail
+          gdalinfo --version
+          command -v gdal_create gdal_translate
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
           if [ -f pyproject.toml ] || [ -f setup.py ]; then python -m pip install -e .; fi
